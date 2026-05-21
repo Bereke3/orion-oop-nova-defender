@@ -21,13 +21,30 @@ public final class KeyboardInputHandler {
     }
 
     private void setKey(KeyCode code, boolean pressed) {
-        switch (code) {
-            case LEFT -> state.left = pressed;
-            case RIGHT -> state.right = pressed;
-            case UP -> state.up = pressed;
-            case DOWN -> state.down = pressed;
-            case SPACE -> state.fire = pressed;
-            case D -> state.debugDamage = pressed;
+        InputAction action = mapKey(code);
+        if (action == null) {
+            return;
         }
+
+        if (pressed) {
+            state.press(action);
+        } else {
+            state.release(action);
+        }
+    }
+
+    private InputAction mapKey(KeyCode code) {
+        return switch (code) {
+            case LEFT -> InputAction.MOVE_LEFT;
+            case RIGHT -> InputAction.MOVE_RIGHT;
+            case UP -> InputAction.MOVE_UP;
+            case DOWN -> InputAction.MOVE_DOWN;
+            case SPACE -> InputAction.FIRE;
+            case ENTER -> InputAction.CONFIRM;
+            case P, ESCAPE -> InputAction.PAUSE;
+            case R -> InputAction.RESTART;
+            case D -> InputAction.DEBUG_DAMAGE;
+            default -> null;
+        };
     }
 }

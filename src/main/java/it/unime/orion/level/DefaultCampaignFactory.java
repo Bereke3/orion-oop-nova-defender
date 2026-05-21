@@ -1,0 +1,197 @@
+package it.unime.orion.level;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.unime.orion.assets.GameAssets;
+import it.unime.orion.entities.boss.BossPhase;
+import it.unime.orion.entities.boss.BossPhaseDefinition;
+import it.unime.orion.entities.boss.BossTuning;
+import it.unime.orion.errors.InvalidGameConfigurationException;
+import it.unime.orion.powerups.PowerUpType;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+
+public final class DefaultCampaignFactory implements CampaignFactory {
+
+    private static final String RESOURCE_PATH = "/campaign/default-campaign.json";
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    @Override
+    public List<LevelDefinition> createCampaign(double worldWidth) {
+        CampaignDocument document = loadDocument();
+        double bossMinX = document.bossArenaPaddingX();
+        double bossMaxX = worldWidth - GameAssets.BOSS_WIDTH - document.bossArenaPaddingX();
+
+        return document.levels().stream()
+                .map(level -> toLevelDefinition(level, bossMinX, bossMaxX))
+                .toList();
+    }
+
+    private CampaignDocument loadDocument() {
+        try (InputStream stream = DefaultCampaignFactory.class.getResourceAsStream(RESOURCE_PATH)) {
+            if (stream == null) {
+                throw new InvalidGameConfigurationException("Missing campaign resource: " + RESOURCE_PATH);
+            }
+            CampaignDocument document = OBJECT_MAPPER.readValue(stream, CampaignDocument.class);
+            if (document.levels() == null || document.levels().isEmpty()) {
+                throw new InvalidGameConfigurationException("Campaign resource must contain at least one level");
+            }
+            return document;
+        } catch (IOException exception) {
+            throw new InvalidGameConfigurationException("Failed to load campaign resource: " + RESOURCE_PATH, exception);
+        }
+    }
+
+    private LevelDefinition toLevelDefinition(LevelPayload payload, double bossMinX, double bossMaxX) {
+        Objects.requireNonNull(payload, "payload");
+        return new LevelDefinition(
+                payload.levelNumber(),
+                payload.waves().stream()
+                        .map(wave -> new Wave(wave.swarmCount(), wave.shooterCount(), wave.heavyCount()))
+                        .toList(),
+                new EnemyTuning(payload.enemyTuning().speedMultiplier(), payload.enemyTuning().fireRateMultiplier()),
+                toBossTuning(payload.bossTuning(), bossMinX, bossMaxX),
+                payload.bossAssetKey(),
+                resolveWaveSpawnStrategy(payload.waveSpawnStrategy()),
+                new LevelRuntimeTuning(
+                        payload.runtimeTuning().ambientPowerUpSpawnIntervalSeconds(),
+                        payload.runtimeTuning().maxAmbientPowerUps(),
+                        resolveBossRewardType(payload.runtimeTuning().bossRewardType())
+                )
+        );
+    }
+
+    private BossTuning toBossTuning(BossTuningPayload payload, double bossMinX, double bossMaxX) {
+        Objects.requireNonNull(payload, "payload");
+        return new BossTuning(
+                payload.maxHp(),
+                payload.contactDamage(),
+                payload.scoreValue(),
+                payload.arenaY(),
+                payload.entrySpeed(),
+                payload.moveAmplitudeMultiplier(),
+                payload.cooldownMultiplier(),
+                payload.extraCannons(),
+                bossMinX,
+                bossMaxX,
+                resolveBulletAssetPath(payload.bulletAsset()),
+                payload.phases().stream().map(this::toBossPhaseDefinition).toList()
+        );
+    }
+
+    private BossPhaseDefinition toBossPhaseDefinition(BossPhasePayload payload) {
+        Objects.requireNonNull(payload, "payload");
+        return new BossPhaseDefinition(
+                resolveBossPhase(payload.phase()),
+                payload.displayName(),
+                payload.maxHpRatio(),
+                payload.moveFrequency(),
+                payload.moveAmplitudeMultiplier(),
+                payload.cooldownSeconds(),
+                payload.assaultDurationSeconds(),
+                payload.chargeDurationSeconds(),
+                payload.rainDurationSeconds(),
+                payload.rainBulletCount(),
+                payload.rainVerticalSpeed()
+        );
+    }
+
+    private WaveSpawnStrategy resolveWaveSpawnStrategy(String strategyId) {
+        return switch (normalizeId(strategyId)) {
+            case "tiered" -> new TieredWaveSpawnStrategy();
+            case "alternating_flank" -> new AlternatingFlankWaveSpawnStrategy();
+            default -> throw new InvalidGameConfigurationException("Unsupported waveSpawnStrategy: " + strategyId);
+        };
+    }
+
+    private Optional<PowerUpType> resolveBossRewardType(String rewardType) {
+        if (rewardType == null || rewardType.isBlank()) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(PowerUpType.valueOf(normalizeEnum(rewardType)));
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidGameConfigurationException("Unsupported boss reward type: " + rewardType, exception);
+        }
+    }
+
+    private String resolveBulletAssetPath(String bulletAsset) {
+        return switch (normalizeId(bulletAsset)) {
+            case "enemy_red" -> GameAssets.getEnemyRedBulletAssetPath();
+            case "enemy_crimson" -> GameAssets.getEnemyCrimsonBulletAssetPath();
+            case "enemy_pink" -> GameAssets.getEnemyPinkBulletAssetPath();
+            default -> throw new InvalidGameConfigurationException("Unsupported boss bullet asset: " + bulletAsset);
+        };
+    }
+
+    private BossPhase resolveBossPhase(String phaseId) {
+        try {
+            return BossPhase.valueOf(normalizeEnum(phaseId));
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidGameConfigurationException("Unsupported boss phase id: " + phaseId, exception);
+        }
+    }
+
+    private String normalizeId(String id) {
+        if (id == null || id.isBlank()) {
+            throw new InvalidGameConfigurationException("Configuration id must not be blank");
+        }
+        return id.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private String normalizeEnum(String value) {
+        return normalizeId(value).replace('-', '_').toUpperCase(Locale.ROOT);
+    }
+
+    private record CampaignDocument(double bossArenaPaddingX, List<LevelPayload> levels) {
+    }
+
+    private record LevelPayload(int levelNumber,
+                                String bossAssetKey,
+                                String waveSpawnStrategy,
+                                List<WavePayload> waves,
+                                EnemyTuningPayload enemyTuning,
+                                BossTuningPayload bossTuning,
+                                RuntimeTuningPayload runtimeTuning) {
+    }
+
+    private record WavePayload(int swarmCount, int shooterCount, int heavyCount) {
+    }
+
+    private record EnemyTuningPayload(double speedMultiplier, double fireRateMultiplier) {
+    }
+
+    private record BossTuningPayload(int maxHp,
+                                     int contactDamage,
+                                     int scoreValue,
+                                     double arenaY,
+                                     double entrySpeed,
+                                     double moveAmplitudeMultiplier,
+                                     double cooldownMultiplier,
+                                     int extraCannons,
+                                     String bulletAsset,
+                                     List<BossPhasePayload> phases) {
+    }
+
+    private record BossPhasePayload(String phase,
+                                    String displayName,
+                                    double maxHpRatio,
+                                    double moveFrequency,
+                                    double moveAmplitudeMultiplier,
+                                    double cooldownSeconds,
+                                    double assaultDurationSeconds,
+                                    double chargeDurationSeconds,
+                                    double rainDurationSeconds,
+                                    int rainBulletCount,
+                                    double rainVerticalSpeed) {
+    }
+
+    private record RuntimeTuningPayload(double ambientPowerUpSpawnIntervalSeconds,
+                                        int maxAmbientPowerUps,
+                                        String bossRewardType) {
+    }
+}

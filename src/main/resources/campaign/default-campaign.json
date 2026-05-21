@@ -1,0 +1,289 @@
+{
+  "bossArenaPaddingX": 70.0,
+  "levels": [
+    {
+      "levelNumber": 1,
+      "bossAssetKey": "boss_a",
+      "waveSpawnStrategy": "tiered",
+      "waves": [
+        { "swarmCount": 4, "shooterCount": 1, "heavyCount": 0 },
+        { "swarmCount": 5, "shooterCount": 2, "heavyCount": 0 },
+        { "swarmCount": 6, "shooterCount": 2, "heavyCount": 1 }
+      ],
+      "enemyTuning": {
+        "speedMultiplier": 1.0,
+        "fireRateMultiplier": 1.0
+      },
+      "bossTuning": {
+        "maxHp": 22,
+        "contactDamage": 20,
+        "scoreValue": 1500,
+        "arenaY": 30,
+        "entrySpeed": 110,
+        "moveAmplitudeMultiplier": 1.0,
+        "cooldownMultiplier": 1.0,
+        "extraCannons": 0,
+        "bulletAsset": "enemy_red",
+        "phases": [
+          {
+            "phase": "PHASE_ONE",
+            "displayName": "Phase 1",
+            "maxHpRatio": 1.0,
+            "moveFrequency": 0.95,
+            "moveAmplitudeMultiplier": 1.0,
+            "cooldownSeconds": 1.45,
+            "assaultDurationSeconds": 5.0,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 8,
+            "rainVerticalSpeed": 250
+          },
+          {
+            "phase": "PHASE_TWO",
+            "displayName": "Phase 2",
+            "maxHpRatio": 0.75,
+            "moveFrequency": 1.2,
+            "moveAmplitudeMultiplier": 1.18,
+            "cooldownSeconds": 1.05,
+            "assaultDurationSeconds": 4.45,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 9,
+            "rainVerticalSpeed": 266
+          },
+          {
+            "phase": "PHASE_THREE",
+            "displayName": "Phase 3",
+            "maxHpRatio": 0.4,
+            "moveFrequency": 1.48,
+            "moveAmplitudeMultiplier": 1.35,
+            "cooldownSeconds": 0.82,
+            "assaultDurationSeconds": 3.9,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 10,
+            "rainVerticalSpeed": 282
+          }
+        ]
+      },
+      "runtimeTuning": {
+        "ambientPowerUpSpawnIntervalSeconds": 8.5,
+        "maxAmbientPowerUps": 2,
+        "bossRewardType": "EXTRA_LIFE"
+      }
+    },
+    {
+      "levelNumber": 2,
+      "bossAssetKey": "boss_a_phase2",
+      "waveSpawnStrategy": "tiered",
+      "waves": [
+        { "swarmCount": 6, "shooterCount": 2, "heavyCount": 1 },
+        { "swarmCount": 7, "shooterCount": 3, "heavyCount": 1 },
+        { "swarmCount": 8, "shooterCount": 3, "heavyCount": 2 }
+      ],
+      "enemyTuning": {
+        "speedMultiplier": 1.1,
+        "fireRateMultiplier": 1.12
+      },
+      "bossTuning": {
+        "maxHp": 30,
+        "contactDamage": 22,
+        "scoreValue": 2200,
+        "arenaY": 34,
+        "entrySpeed": 120,
+        "moveAmplitudeMultiplier": 1.12,
+        "cooldownMultiplier": 1.15,
+        "extraCannons": 1,
+        "bulletAsset": "enemy_crimson",
+        "phases": [
+          {
+            "phase": "PHASE_ONE",
+            "displayName": "Phase 1",
+            "maxHpRatio": 1.0,
+            "moveFrequency": 0.95,
+            "moveAmplitudeMultiplier": 1.08,
+            "cooldownSeconds": 1.45,
+            "assaultDurationSeconds": 5.0,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 8,
+            "rainVerticalSpeed": 250
+          },
+          {
+            "phase": "PHASE_TWO",
+            "displayName": "Phase 2",
+            "maxHpRatio": 0.78,
+            "moveFrequency": 1.2,
+            "moveAmplitudeMultiplier": 1.28,
+            "cooldownSeconds": 1.05,
+            "assaultDurationSeconds": 4.45,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 10,
+            "rainVerticalSpeed": 266
+          },
+          {
+            "phase": "PHASE_THREE",
+            "displayName": "Phase 3",
+            "maxHpRatio": 0.43,
+            "moveFrequency": 1.48,
+            "moveAmplitudeMultiplier": 1.44,
+            "cooldownSeconds": 0.82,
+            "assaultDurationSeconds": 3.9,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 11,
+            "rainVerticalSpeed": 282
+          }
+        ]
+      },
+      "runtimeTuning": {
+        "ambientPowerUpSpawnIntervalSeconds": 7.2,
+        "maxAmbientPowerUps": 2,
+        "bossRewardType": "SHIELD"
+      }
+    },
+    {
+      "levelNumber": 3,
+      "bossAssetKey": "boss_a_phase3",
+      "waveSpawnStrategy": "alternating_flank",
+      "waves": [
+        { "swarmCount": 7, "shooterCount": 3, "heavyCount": 2 },
+        { "swarmCount": 8, "shooterCount": 4, "heavyCount": 2 },
+        { "swarmCount": 10, "shooterCount": 4, "heavyCount": 2 }
+      ],
+      "enemyTuning": {
+        "speedMultiplier": 1.22,
+        "fireRateMultiplier": 1.25
+      },
+      "bossTuning": {
+        "maxHp": 38,
+        "contactDamage": 25,
+        "scoreValue": 3000,
+        "arenaY": 38,
+        "entrySpeed": 130,
+        "moveAmplitudeMultiplier": 1.25,
+        "cooldownMultiplier": 1.3,
+        "extraCannons": 1,
+        "bulletAsset": "enemy_pink",
+        "phases": [
+          {
+            "phase": "PHASE_ONE",
+            "displayName": "Phase 1",
+            "maxHpRatio": 1.0,
+            "moveFrequency": 0.95,
+            "moveAmplitudeMultiplier": 1.18,
+            "cooldownSeconds": 1.45,
+            "assaultDurationSeconds": 5.0,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 9,
+            "rainVerticalSpeed": 250
+          },
+          {
+            "phase": "PHASE_TWO",
+            "displayName": "Phase 2",
+            "maxHpRatio": 0.8,
+            "moveFrequency": 1.2,
+            "moveAmplitudeMultiplier": 1.4,
+            "cooldownSeconds": 1.05,
+            "assaultDurationSeconds": 4.45,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 10,
+            "rainVerticalSpeed": 266
+          },
+          {
+            "phase": "PHASE_THREE",
+            "displayName": "Phase 3",
+            "maxHpRatio": 0.46,
+            "moveFrequency": 1.48,
+            "moveAmplitudeMultiplier": 1.55,
+            "cooldownSeconds": 0.82,
+            "assaultDurationSeconds": 3.9,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 11,
+            "rainVerticalSpeed": 282
+          }
+        ]
+      },
+      "runtimeTuning": {
+        "ambientPowerUpSpawnIntervalSeconds": 6.4,
+        "maxAmbientPowerUps": 3,
+        "bossRewardType": "WEAPON_UPGRADE"
+      }
+    },
+    {
+      "levelNumber": 4,
+      "bossAssetKey": "boss_a_phase3",
+      "waveSpawnStrategy": "alternating_flank",
+      "waves": [
+        { "swarmCount": 8, "shooterCount": 4, "heavyCount": 2 },
+        { "swarmCount": 10, "shooterCount": 4, "heavyCount": 3 },
+        { "swarmCount": 12, "shooterCount": 5, "heavyCount": 3 }
+      ],
+      "enemyTuning": {
+        "speedMultiplier": 1.35,
+        "fireRateMultiplier": 1.4
+      },
+      "bossTuning": {
+        "maxHp": 48,
+        "contactDamage": 28,
+        "scoreValue": 4200,
+        "arenaY": 42,
+        "entrySpeed": 140,
+        "moveAmplitudeMultiplier": 1.4,
+        "cooldownMultiplier": 1.45,
+        "extraCannons": 2,
+        "bulletAsset": "enemy_pink",
+        "phases": [
+          {
+            "phase": "PHASE_ONE",
+            "displayName": "Phase 1",
+            "maxHpRatio": 1.0,
+            "moveFrequency": 0.95,
+            "moveAmplitudeMultiplier": 1.28,
+            "cooldownSeconds": 1.45,
+            "assaultDurationSeconds": 5.0,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 9,
+            "rainVerticalSpeed": 250
+          },
+          {
+            "phase": "PHASE_TWO",
+            "displayName": "Phase 2",
+            "maxHpRatio": 0.82,
+            "moveFrequency": 1.2,
+            "moveAmplitudeMultiplier": 1.52,
+            "cooldownSeconds": 1.05,
+            "assaultDurationSeconds": 4.45,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 11,
+            "rainVerticalSpeed": 266
+          },
+          {
+            "phase": "PHASE_THREE",
+            "displayName": "Phase 3",
+            "maxHpRatio": 0.5,
+            "moveFrequency": 1.48,
+            "moveAmplitudeMultiplier": 1.72,
+            "cooldownSeconds": 0.82,
+            "assaultDurationSeconds": 3.9,
+            "chargeDurationSeconds": 2.0,
+            "rainDurationSeconds": 0.7,
+            "rainBulletCount": 12,
+            "rainVerticalSpeed": 282
+          }
+        ]
+      },
+      "runtimeTuning": {
+        "ambientPowerUpSpawnIntervalSeconds": 5.8,
+        "maxAmbientPowerUps": 3,
+        "bossRewardType": null
+      }
+    }
+  ]
+}

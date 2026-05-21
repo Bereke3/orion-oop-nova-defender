@@ -5,5 +5,6 @@ public enum EntityType {
     ENEMY,
     BOSS,
     PROJECTILE,
-    POWER_UP
+    POWER_UP,
+    EFFECT
 }

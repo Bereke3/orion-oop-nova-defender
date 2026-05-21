@@ -11,13 +11,13 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
     private final String id = UUID.randomUUID().toString();
     private final EntityType type;
 
-    protected double x;
-    protected double y;
+    private double x;
+    private double y;
 
-    protected double vx;
-    protected double vy;
+    private double vx;
+    private double vy;
 
-    protected final Node view;
+    private final Node view;
 
     protected GameEntity(EntityType type, Node view, double x, double y) {
         this.type = Objects.requireNonNull(type, "type");
@@ -43,12 +43,26 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
         return y;
     }
 
-    public void setVelocity(double vx, double vy) {
+    public final void setVelocity(double vx, double vy) {
         this.vx = vx;
         this.vy = vy;
     }
 
-    protected final void syncView() {
+    protected final double getVelocityX() {
+        return vx;
+    }
+
+    protected final double getVelocityY() {
+        return vy;
+    }
+
+    protected final void setPosition(double x, double y) {
+        this.x = x;
+        this.y = y;
+        syncView();
+    }
+
+    private void syncView() {
         view.setLayoutX(x);
         view.setLayoutY(y);
     }

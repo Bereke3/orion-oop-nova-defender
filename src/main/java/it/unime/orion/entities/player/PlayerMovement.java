@@ -1,5 +1,7 @@
 package it.unime.orion.entities.player;
 
+import it.unime.orion.errors.InvalidGameConfigurationException;
+
 public final class PlayerMovement {
 
     private final double speed;
@@ -13,6 +15,15 @@ public final class PlayerMovement {
     public PlayerMovement(double speed,
                           double minX, double maxX,
                           double minY, double maxY) {
+        if (speed <= 0) {
+            throw new InvalidGameConfigurationException("Player speed must be > 0");
+        }
+        if (minX > maxX) {
+            throw new InvalidGameConfigurationException("minX must be <= maxX");
+        }
+        if (minY > maxY) {
+            throw new InvalidGameConfigurationException("minY must be <= maxY");
+        }
 
         this.speed = speed;
         this.minX = minX;
