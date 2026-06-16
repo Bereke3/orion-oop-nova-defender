@@ -55,8 +55,7 @@ public final class ExplosionEffect extends VisualEffect {
     @Override
     protected void applyFrame(double progress) {
         double scale = 1.0 + (scaleGrowth * progress);
-        getView().setScaleX(scale);
-        getView().setScaleY(scale);
-        getView().setOpacity(1.0 - progress);
+        setViewScale(scale, scale);
+        setViewOpacity(1.0 - progress);
     }
 }

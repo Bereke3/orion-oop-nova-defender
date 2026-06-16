@@ -84,7 +84,7 @@ public final class GameplayRuntime implements AutoCloseable {
             world.addEntity(projectile);
         }
         // Keep the player sprite readable when new bullets are spawned in the same area.
-        player.getView().toFront();
+        player.bringToFront();
     }
 
     public void applyLevelRuntimeTuning(LevelRuntimeTuning runtimeTuning) {

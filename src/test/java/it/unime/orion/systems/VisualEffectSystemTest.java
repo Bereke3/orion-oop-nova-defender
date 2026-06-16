@@ -19,10 +19,11 @@ public final class VisualEffectSystemTest {
         EventBus<EnemyDestroyedEvent> enemyDestroyedBus = new EventBus<>();
         EventBus<PowerUpCollectedEvent> powerUpCollectedBus = new EventBus<>();
 
-        new VisualEffectSystem(world, enemyDestroyedBus, powerUpCollectedBus);
-        enemyDestroyedBus.publish(new EnemyDestroyedEvent("enemy-1", 120, 160, 50, false));
+        try (VisualEffectSystem visualEffectSystem = new VisualEffectSystem(world, enemyDestroyedBus, powerUpCollectedBus)) {
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("enemy-1", 120, 160, 50, false));
 
-        assertEquals(1, countEffects(world, ExplosionEffect.class));
+            assertEquals(1, countEffects(world, ExplosionEffect.class));
+        }
     }
 
     @Test
@@ -31,10 +32,11 @@ public final class VisualEffectSystemTest {
         EventBus<EnemyDestroyedEvent> enemyDestroyedBus = new EventBus<>();
         EventBus<PowerUpCollectedEvent> powerUpCollectedBus = new EventBus<>();
 
-        new VisualEffectSystem(world, enemyDestroyedBus, powerUpCollectedBus);
-        powerUpCollectedBus.publish(new PowerUpCollectedEvent("powerup-1", PowerUpType.HEAL, 90, 140));
+        try (VisualEffectSystem visualEffectSystem = new VisualEffectSystem(world, enemyDestroyedBus, powerUpCollectedBus)) {
+            powerUpCollectedBus.publish(new PowerUpCollectedEvent("powerup-1", PowerUpType.HEAL, 90, 140));
 
-        assertEquals(1, countEffects(world, PowerUpPickupEffect.class));
+            assertEquals(1, countEffects(world, PowerUpPickupEffect.class));
+        }
     }
 
     private int countEffects(GameWorld world, Class<?> effectType) {

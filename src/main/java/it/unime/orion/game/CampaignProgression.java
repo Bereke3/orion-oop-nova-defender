@@ -2,7 +2,6 @@ package it.unime.orion.game;
 
 import it.unime.orion.entities.GameEntity;
 import it.unime.orion.entities.boss.BossA;
-import it.unime.orion.entities.enemy.Enemy;
 import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.level.LevelDefinition;
 import it.unime.orion.level.WaveManager;

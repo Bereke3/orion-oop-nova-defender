@@ -1,6 +1,7 @@
 package it.unime.orion.ui;
 
 import it.unime.orion.game.GameState;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -51,7 +52,7 @@ public final class GameOverlayView {
         root.setVisible(true);
     }
 
-    public Pane getRoot() {
+    public Parent getRoot() {
         return root;
     }
 

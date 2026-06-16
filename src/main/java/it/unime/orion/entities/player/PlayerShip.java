@@ -56,26 +56,12 @@ public final class PlayerShip extends Ship {
         this.respawnInvulnerabilitySeconds = respawnInvulnerabilitySeconds;
     }
 
-    public PlayerStats getStats() {
-        return stats;
-    }
-
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
     public boolean canFire() {
         return weaponCooldownLeft <= 0;
     }
 
     public double getWeaponCooldownLeft() {
         return weaponCooldownLeft;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = Objects.requireNonNull(weapon, "weapon");
-        this.weaponCooldownLeft = 0;
-        this.weaponUpgradeTimeLeft = 0;
     }
 
     public void activateTemporaryWeapon(Weapon weapon, double durationSeconds) {
@@ -95,6 +81,26 @@ public final class PlayerShip extends Ship {
         return respawnInvulnerabilitySeconds;
     }
 
+    public void heal(int amount) {
+        stats.heal(amount);
+    }
+
+    public void activateShield() {
+        stats.activateShield();
+    }
+
+    public boolean hasShield() {
+        return stats.hasShield();
+    }
+
+    public boolean isInvulnerable() {
+        return stats.isInvulnerable();
+    }
+
+    public String getCurrentWeaponDisplayName() {
+        return weapon.getDisplayName();
+    }
+
     public void respawn() {
         setPosition(spawnX, spawnY);
         setVelocity(0, 0);
@@ -112,7 +118,7 @@ public final class PlayerShip extends Ship {
             return List.of();
         }
 
-        double originX = getX() + (getView().getBoundsInLocal().getWidth() / 2.0)
+        double originX = getX() + (getViewWidth() / 2.0)
                 - (GameAssets.PLAYER_BULLET_WIDTH / 2.0);
         // Spawn bullets fully above the ship nose so they do not visually cover the player sprite.
         double originY = getY() - GameAssets.PLAYER_BULLET_HEIGHT - 4;
@@ -159,9 +165,9 @@ public final class PlayerShip extends Ship {
     private void applyInvulnerabilityVisual() {
         if (stats.isInvulnerable()) {
             double blinkPhase = stats.getInvulnerabilitySecondsLeft() * 10.0;
-            getView().setOpacity(((int) blinkPhase % 2 == 0) ? 0.45 : 1.0);
+            setViewOpacity(((int) blinkPhase % 2 == 0) ? 0.45 : 1.0);
         } else {
-            getView().setOpacity(1.0);
+            setViewOpacity(1.0);
         }
     }
 }

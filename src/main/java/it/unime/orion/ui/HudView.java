@@ -1,6 +1,7 @@
 package it.unime.orion.ui;
 
 import it.unime.orion.assets.GameAssets;
+import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -83,7 +84,7 @@ public final class HudView {
         root.getChildren().addAll(hpBarBg, hpBar, bossBarBg, bossBar, hpText, heartsPane, scoreText, bossText);
     }
 
-    public Pane getRoot() {
+    public Parent getRoot() {
         return root;
     }
 

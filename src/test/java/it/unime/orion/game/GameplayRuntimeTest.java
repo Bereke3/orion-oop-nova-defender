@@ -17,11 +17,11 @@ public final class GameplayRuntimeTest {
         GameWorld world = new GameWorld();
         GameSession session = new GameSession();
         PlayerShip player = createPlayer();
-        GameplayRuntime runtime = new GameplayRuntime(world, session, player, 900);
+        try (GameplayRuntime runtime = new GameplayRuntime(world, session, player, 900)) {
+            runtime.applyDebugDamageToPlayer(15);
 
-        runtime.applyDebugDamageToPlayer(15);
-
-        assertEquals(85, player.getHp());
+            assertEquals(85, player.getHp());
+        }
     }
 
     @Test

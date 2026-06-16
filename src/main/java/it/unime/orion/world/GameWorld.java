@@ -2,6 +2,7 @@ package it.unime.orion.world;
 
 import it.unime.orion.entities.GameEntity;
 import it.unime.orion.errors.EntityLifecycleException;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public final class GameWorld {
     private final Pane root = new Pane();
     private final List<GameEntity> entities = new ArrayList<>();
 
-    public Pane getRoot() {
+    public Parent getRoot() {
         return root;
     }
 
@@ -31,11 +32,11 @@ public final class GameWorld {
         if (entities.contains(entity)) {
             throw new EntityLifecycleException("Entity already added to world: " + entity.getId());
         }
-        if (root.getChildren().contains(entity.getView())) {
+        if (entity.isAttachedTo(root)) {
             throw new EntityLifecycleException("Entity view is already attached to the world: " + entity.getId());
         }
         entities.add(entity);
-        root.getChildren().add(entity.getView());
+        entity.attachTo(root);
     }
 
     public boolean removeEntity(GameEntity entity) {
@@ -44,7 +45,7 @@ public final class GameWorld {
         }
 
         boolean removedEntity = entities.remove(entity);
-        boolean removedView = root.getChildren().remove(entity.getView());
+        boolean removedView = entity.detachFrom(root);
 
         if (!removedEntity || !removedView) {
             LOGGER.warning("Attempted to remove an entity that is not fully registered in the world: " + entity.getId());

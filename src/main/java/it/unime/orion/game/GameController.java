@@ -2,7 +2,6 @@ package it.unime.orion.game;
 
 import it.unime.orion.assets.GameAssets;
 import it.unime.orion.entities.player.PlayerMovement;
-import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.input.InputState;
 import it.unime.orion.level.CampaignFactory;
 import it.unime.orion.level.CampaignValidator;
@@ -19,7 +18,6 @@ import java.util.Objects;
 
 public final class GameController implements AutoCloseable {
 
-    private final InputState input;
     private final GameSession session = new GameSession();
     private final PlayerMovement playerMovement;
     private final SessionInputInterpreter sessionInputInterpreter;
@@ -72,7 +70,7 @@ public final class GameController implements AutoCloseable {
                           BossFactory bossFactory,
                           GameplayRuntimeFactory runtimeFactory,
                           CampaignValidator campaignValidator) {
-        this.input = Objects.requireNonNull(input, "input");
+        Objects.requireNonNull(input, "input");
 
         this.playerMovement = createPlayerMovement(worldWidth, worldHeight);
         this.sessionInputInterpreter = new SessionInputInterpreter(input);

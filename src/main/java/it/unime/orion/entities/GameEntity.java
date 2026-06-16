@@ -2,6 +2,7 @@ package it.unime.orion.entities;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -68,8 +69,39 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
     }
 
     @Override
-    public final Node getView() {
-        return view;
+    public final void attachTo(Pane parent) {
+        Objects.requireNonNull(parent, "parent").getChildren().add(view);
+    }
+
+    @Override
+    public final boolean detachFrom(Pane parent) {
+        return Objects.requireNonNull(parent, "parent").getChildren().remove(view);
+    }
+
+    public final boolean isAttachedTo(Pane parent) {
+        return Objects.requireNonNull(parent, "parent").getChildren().contains(view);
+    }
+
+    @Override
+    public final void bringToFront() {
+        view.toFront();
+    }
+
+    protected final double getViewWidth() {
+        return view.getBoundsInLocal().getWidth();
+    }
+
+    protected final void setViewOpacity(double opacity) {
+        view.setOpacity(opacity);
+    }
+
+    protected final void setViewScale(double scaleX, double scaleY) {
+        view.setScaleX(scaleX);
+        view.setScaleY(scaleY);
+    }
+
+    protected final void setViewRotation(double angleDegrees) {
+        view.setRotate(angleDegrees);
     }
 
     @Override

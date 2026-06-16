@@ -4,7 +4,6 @@ import it.unime.orion.assets.GameAssets;
 import it.unime.orion.combat.BasicWeapon;
 import it.unime.orion.entities.boss.BossA;
 import it.unime.orion.entities.boss.BossTuning;
-import it.unime.orion.entities.player.PlayerMovement;
 import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.entities.player.PlayerStats;
 import it.unime.orion.input.InputAction;

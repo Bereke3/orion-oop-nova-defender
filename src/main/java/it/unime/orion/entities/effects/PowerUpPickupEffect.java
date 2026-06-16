@@ -37,9 +37,8 @@ public final class PowerUpPickupEffect extends VisualEffect {
     @Override
     protected void applyFrame(double progress) {
         double scale = 1.0 + (1.2 * progress);
-        getView().setScaleX(scale);
-        getView().setScaleY(scale);
-        getView().setRotate(90 * progress);
-        getView().setOpacity(1.0 - progress);
+        setViewScale(scale, scale);
+        setViewRotation(90 * progress);
+        setViewOpacity(1.0 - progress);
     }
 }

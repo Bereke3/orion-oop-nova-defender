@@ -23,13 +23,13 @@ public final class BossRewardSystemTest {
         EventBus<EnemyDestroyedEvent> enemyDestroyedBus = new EventBus<>();
         PowerUpFactory factory = (type, x, y) -> new ExtraLifePowerUp(new Rectangle(24, 24), x, y);
 
-        new BossRewardSystem(world, enemyDestroyedBus, factory, new DefaultBossRewardPolicy());
+        try (BossRewardSystem rewardSystem = new BossRewardSystem(world, enemyDestroyedBus, factory, new DefaultBossRewardPolicy())) {
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("enemy-1", 100, 140, 50, false));
+            assertEquals(0, countPowerUps(world));
 
-        enemyDestroyedBus.publish(new EnemyDestroyedEvent("enemy-1", 100, 140, 50, false));
-        assertEquals(0, countPowerUps(world));
-
-        enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-1", 160, 180, 1500, true));
-        assertEquals(1, countPowerUps(world));
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-1", 160, 180, 1500, true));
+            assertEquals(1, countPowerUps(world));
+        }
     }
 
     @Test
@@ -55,15 +55,36 @@ public final class BossRewardSystemTest {
             default -> new ExtraLifePowerUp(new Rectangle(24, 24), x, y);
         };
 
-        BossRewardSystem rewardSystem = new BossRewardSystem(world, enemyDestroyedBus, factory, new DefaultBossRewardPolicy());
-        rewardSystem.setBossRewardPolicy(new FixedBossRewardPolicy(Optional.of(PowerUpType.SHIELD)));
+        try (BossRewardSystem rewardSystem = new BossRewardSystem(world, enemyDestroyedBus, factory, new DefaultBossRewardPolicy())) {
+            rewardSystem.setBossRewardPolicy(new FixedBossRewardPolicy(Optional.of(PowerUpType.SHIELD)));
 
-        enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-1", 160, 180, 1500, true));
-        assertTrue(world.getEntitiesView().stream().anyMatch(ShieldPowerUp.class::isInstance));
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-1", 160, 180, 1500, true));
+            assertTrue(world.getEntitiesView().stream().anyMatch(ShieldPowerUp.class::isInstance));
 
-        rewardSystem.setBossRewardPolicy(new FixedBossRewardPolicy(Optional.empty()));
-        enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-2", 200, 200, 1500, true));
-        assertEquals(1, countPowerUps(world));
+            rewardSystem.setBossRewardPolicy(new FixedBossRewardPolicy(Optional.empty()));
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-2", 200, 200, 1500, true));
+            assertEquals(1, countPowerUps(world));
+        }
+    }
+
+    @Test
+    void testNewPolicyExtendsRewardSystemWithoutChangingConsumerCode() {
+        GameWorld world = new GameWorld();
+        EventBus<EnemyDestroyedEvent> enemyDestroyedBus = new EventBus<>();
+        PowerUpFactory factory = (type, x, y) -> new ShieldPowerUp(new Rectangle(24, 24), x, y);
+
+        try (BossRewardSystem rewardSystem = new BossRewardSystem(
+                world,
+                enemyDestroyedBus,
+                factory,
+                new ScoreThresholdBossRewardPolicy(2000, PowerUpType.SHIELD)
+        )) {
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-1", 160, 180, 2500, true));
+            enemyDestroyedBus.publish(new EnemyDestroyedEvent("boss-2", 200, 220, 1500, true));
+
+            assertEquals(1, countPowerUps(world));
+            assertTrue(world.getEntitiesView().stream().anyMatch(ShieldPowerUp.class::isInstance));
+        }
     }
 
     private int countPowerUps(GameWorld world) {

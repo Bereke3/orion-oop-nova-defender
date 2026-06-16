@@ -18,12 +18,12 @@ public final class GamePowerUpContext implements PowerUpContext {
 
     @Override
     public void healPlayer(int amount) {
-        player.getStats().heal(amount);
+        player.heal(amount);
     }
 
     @Override
     public void activateShield() {
-        player.getStats().activateShield();
+        player.activateShield();
     }
 
     @Override

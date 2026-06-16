@@ -211,7 +211,7 @@
       "runtimeTuning": {
         "ambientPowerUpSpawnIntervalSeconds": 6.4,
         "maxAmbientPowerUps": 3,
-        "bossRewardType": "WEAPON_UPGRADE"
+        "bossRewardType": "EXTRA_LIFE"
       }
     },
     {
@@ -282,7 +282,7 @@
       "runtimeTuning": {
         "ambientPowerUpSpawnIntervalSeconds": 5.8,
         "maxAmbientPowerUps": 3,
-        "bossRewardType": null
+        "bossRewardType": "EXTRA_LIFE"
       }
     }
   ]
