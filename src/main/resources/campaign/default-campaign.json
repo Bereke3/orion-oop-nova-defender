@@ -140,7 +140,7 @@
       "runtimeTuning": {
         "ambientPowerUpSpawnIntervalSeconds": 7.2,
         "maxAmbientPowerUps": 2,
-        "bossRewardType": "SHIELD"
+        "bossRewardType": "EXTRA_LIFE"
       }
     },
     {
