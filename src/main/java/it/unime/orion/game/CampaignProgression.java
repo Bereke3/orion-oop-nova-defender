@@ -62,7 +62,6 @@ public final class CampaignProgression {
         Objects.requireNonNull(player, "player");
 
         if (session.hasBossSpawned()) {
-            // Recover cleanly even if the boss leaves the world unexpectedly.
             if (isBossEncounterResolved()) {
                 handleBossDefeated(session, player);
             }

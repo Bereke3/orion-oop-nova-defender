@@ -8,10 +8,6 @@ import it.unime.orion.world.GameWorld;
 
 import java.util.Objects;
 
-/**
- * Owns the lifecycle of one active run: player creation, runtime creation,
- * level-specific runtime tuning, restart flow, and UI refresh after gameplay updates.
- */
 final class GameRunLifecycle implements AutoCloseable {
 
     private final double worldWidth;

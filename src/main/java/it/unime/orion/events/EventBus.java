@@ -5,15 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/**
- * Minimal in-process event bus used by the gameplay runtime.
- * <p>
- * This implementation is intentionally not thread-safe and is expected to be used
- * only from the JavaFX application thread together with the rest of the game loop.
- */
+
 public final class EventBus<T extends GameEvent> {
 
-    // Not thread-safe: intended to be used only from the JavaFX application thread.
     private final List<Consumer<T>> subscribers = new ArrayList<>();
 
     public EventSubscription subscribe(Consumer<T> handler) {

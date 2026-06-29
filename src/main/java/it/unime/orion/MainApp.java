@@ -21,7 +21,6 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Bootstrap the JavaFX scene and wire the gameplay components together.
         double width = 900;
         double height = 600;
 

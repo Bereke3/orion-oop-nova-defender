@@ -7,10 +7,6 @@ import it.unime.orion.powerups.PowerUpType;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Optional alternative reward policy added as an extension example: it can be
- * plugged into the existing boss reward system without modifying that system.
- */
 public final class ScoreThresholdBossRewardPolicy implements BossRewardPolicy {
 
     private final int minimumBossScoreValue;

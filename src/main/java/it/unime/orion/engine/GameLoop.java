@@ -51,7 +51,6 @@ public final class GameLoop extends AnimationTimer {
         double deltaSeconds = (nowNs - lastNs) / 1_000_000_000.0;
         lastNs = nowNs;
 
-        // Let the controller update input and gameplay systems before entity movement.
         preUpdate.run(deltaSeconds);
 
         if (shouldAdvanceWorld.getAsBoolean()) {

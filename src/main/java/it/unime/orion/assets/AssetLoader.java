@@ -21,7 +21,6 @@ public final class AssetLoader {
             throw new MissingAssetException("Resource not found: " + resourcePath);
         }
         try (InputStream input = resourceStream) {
-            // Copy the bytes first so the JavaFX image can be created from an independent stream.
             return new Image(new ByteArrayInputStream(input.readAllBytes()));
         } catch (IOException exception) {
             throw new IllegalStateException("Failed to load resource: " + resourcePath, exception);

@@ -102,7 +102,6 @@ public final class GameController implements AutoCloseable {
     }
 
     public void preUpdate(double dt) {
-        // Process high-level session commands before player and world updates.
         handleSessionCommand(sessionInputInterpreter.poll(session.getState()));
 
         if (!session.isRunning()) {

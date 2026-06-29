@@ -28,7 +28,6 @@ public final class GameWorld {
 
     public void addEntity(GameEntity entity) {
         Objects.requireNonNull(entity, "entity");
-        // Keep the world list and JavaFX node tree in sync at all times.
         if (entities.contains(entity)) {
             throw new EntityLifecycleException("Entity already added to world: " + entity.getId());
         }

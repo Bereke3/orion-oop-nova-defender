@@ -47,7 +47,6 @@ public final class CollisionSystem {
         int collisionsCount = 0;
         int powerUpsCollected = 0;
 
-        // Iterate over a snapshot so collisions can safely schedule removals.
         List<GameEntity> snapshot = new ArrayList<>(world.getEntitiesView());
 
         for (GameEntity entity : snapshot) {

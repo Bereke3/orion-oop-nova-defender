@@ -15,10 +15,6 @@ import it.unime.orion.systems.ScoreThresholdBossRewardPolicy;
 import it.unime.orion.world.GameWorld;
 import javafx.scene.shape.Rectangle;
 
-/**
- * Auxiliary client program used in the report to show the professor-requested
- * client-side examples without modifying the gameplay flow.
- */
 public final class ClientProgramExamples {
 
     private ClientProgramExamples() {

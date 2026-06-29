@@ -120,7 +120,6 @@ public final class PlayerShip extends Ship {
 
         double originX = getX() + (getViewWidth() / 2.0)
                 - (GameAssets.PLAYER_BULLET_WIDTH / 2.0);
-        // Spawn bullets fully above the ship nose so they do not visually cover the player sprite.
         double originY = getY() - GameAssets.PLAYER_BULLET_HEIGHT - 4;
         weaponCooldownLeft = weapon.getCooldownSeconds();
         return weapon.fire(originX, originY);
