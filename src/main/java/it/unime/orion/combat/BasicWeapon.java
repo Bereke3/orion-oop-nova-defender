@@ -18,9 +18,5 @@ public final class BasicWeapon implements Weapon {
     public double getCooldownSeconds() {
         return COOLDOWN_SECONDS;
     }
-
-    @Override
-    public String getDisplayName() {
-        return "Basic Weapon";
-    }
 }
+  

@@ -20,9 +20,4 @@ public final class DoubleShotWeapon implements Weapon {
     public double getCooldownSeconds() {
         return COOLDOWN_SECONDS;
     }
-
-    @Override
-    public String getDisplayName() {
-        return "Double Shot";
-    }
 }
