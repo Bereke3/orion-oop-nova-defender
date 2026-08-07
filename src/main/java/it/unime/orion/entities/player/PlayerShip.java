@@ -97,10 +97,6 @@ public final class PlayerShip extends Ship {
         return stats.isInvulnerable();
     }
 
-    public String getCurrentWeaponDisplayName() {
-        return weapon.getDisplayName();
-    }
-
     public void respawn() {
         setPosition(spawnX, spawnY);
         setVelocity(0, 0);
