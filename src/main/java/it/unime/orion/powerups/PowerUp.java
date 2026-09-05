@@ -1,13 +1,12 @@
 package it.unime.orion.powerups;
 
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.GameEntity;
 import javafx.scene.Node;
 
 public abstract class PowerUp extends GameEntity {
 
     protected PowerUp(Node view, double x, double y) {
-        super(EntityType.POWER_UP, view, x, y);
+        super(view, x, y);
         setVelocity(0, 80);
     }
 

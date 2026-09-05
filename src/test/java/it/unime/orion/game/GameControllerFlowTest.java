@@ -8,9 +8,6 @@ import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.entities.player.PlayerStats;
 import it.unime.orion.input.InputAction;
 import it.unime.orion.input.InputState;
-import it.unime.orion.level.CampaignFactory;
-import it.unime.orion.level.CampaignValidator;
-import it.unime.orion.level.DefaultCampaignValidator;
 import it.unime.orion.level.EnemyTuning;
 import it.unime.orion.level.LevelDefinition;
 import it.unime.orion.level.Wave;
@@ -86,7 +83,14 @@ public final class GameControllerFlowTest {
     }
 
     private GameController createController(GameWorld world, HudView hud, GameOverlayView overlay, InputState input) {
-        CampaignFactory campaignFactory = width -> List.of(
+        return new GameController(
+                WORLD_WIDTH,
+                WORLD_HEIGHT,
+                world,
+                hud,
+                overlay,
+                input,
+                width -> List.of(
                 new LevelDefinition(
                         1,
                         List.of(new Wave(1, 0, 0)),
@@ -96,36 +100,17 @@ public final class GameControllerFlowTest {
                         (ignoredWorld, ignoredWidth, waveIndex, wave, tuning) -> {
                         }
                 )
+                ),
+                (movement, worldWidth, worldHeight) -> new PlayerShip(
+                        new Rectangle(60, 40),
+                        (worldWidth - GameAssets.PLAYER_WIDTH) / 2.0,
+                        worldHeight - GameAssets.PLAYER_HEIGHT - 14,
+                        new PlayerStats(10),
+                        movement,
+                        new BasicWeapon(),
+                        0
+                )
         );
-        PlayerFactory playerFactory = (movement, worldWidth, worldHeight) -> new PlayerShip(
-                new Rectangle(60, 40),
-                (worldWidth - GameAssets.PLAYER_WIDTH) / 2.0,
-                worldHeight - GameAssets.PLAYER_HEIGHT - 14,
-                new PlayerStats(10),
-                movement,
-                new BasicWeapon(),
-                0
-        );
-        BossFactory bossFactory = this::createBoss;
-        CampaignValidator validator = new DefaultCampaignValidator();
-
-        return new GameController(
-                WORLD_WIDTH,
-                WORLD_HEIGHT,
-                world,
-                hud,
-                overlay,
-                input,
-                campaignFactory,
-                playerFactory,
-                bossFactory,
-                new DefaultGameplayRuntimeFactory(),
-                validator
-        );
-    }
-
-    private BossA createBoss(LevelDefinition level, double worldWidth) {
-        return new BossA(new Rectangle(100, 60), 100, 0, level.getBossTuning());
     }
 
     private void tap(GameController controller, InputState input, InputAction action) {

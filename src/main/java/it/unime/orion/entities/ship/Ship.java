@@ -1,16 +1,14 @@
 package it.unime.orion.entities.ship;
 
-import it.unime.orion.entities.Damageable;
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.GameEntity;
 import javafx.scene.Node;
 
-public abstract class Ship extends GameEntity implements Damageable {
+public abstract class Ship extends GameEntity {
 
     private final int contactDamage;
 
-    protected Ship(EntityType type, Node view, double x, double y, int contactDamage) {
-        super(type, view, x, y);
+    protected Ship(Node view, double x, double y, int contactDamage) {
+        super(view, x, y);
         if (contactDamage < 0) {
             throw new IllegalArgumentException("contactDamage must be >= 0");
         }
@@ -27,7 +25,6 @@ public abstract class Ship extends GameEntity implements Damageable {
 
     protected abstract void applyDamage(int amount);
 
-    @Override
     public final void takeDamage(int amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("damage amount must be >= 0");
@@ -38,7 +35,6 @@ public abstract class Ship extends GameEntity implements Damageable {
         applyDamage(amount);
     }
 
-    @Override
     public final boolean isAlive() {
         return getHp() > 0;
     }

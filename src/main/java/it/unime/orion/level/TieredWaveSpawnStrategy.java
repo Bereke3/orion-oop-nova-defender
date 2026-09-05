@@ -2,9 +2,6 @@ package it.unime.orion.level;
 
 import it.unime.orion.assets.GameAssets;
 import it.unime.orion.entities.enemy.Enemy;
-import it.unime.orion.entities.enemy.EnemyType1Swarm;
-import it.unime.orion.entities.enemy.EnemyType2Shooter;
-import it.unime.orion.entities.enemy.EnemyType3Heavy;
 import it.unime.orion.world.GameWorld;
 
 import java.util.Objects;
@@ -32,7 +29,7 @@ public final class TieredWaveSpawnStrategy implements WaveSpawnStrategy {
             double spawnX = xPositions[column] + (row % 2 == 0 ? 0 : 24);
             double spawnY = -GameAssets.SWARM_HEIGHT - row * 78 - waveIndex * 28;
             double entryTargetY = 62 + row * 48;
-            Enemy enemy = new EnemyType1Swarm(
+            Enemy enemy = Enemy.createSwarm(
                     GameAssets.createSwarmEnemyView(),
                     spawnX,
                     spawnY,
@@ -53,7 +50,7 @@ public final class TieredWaveSpawnStrategy implements WaveSpawnStrategy {
             double spawnX = xPositions[column];
             double spawnY = -GameAssets.SHOOTER_HEIGHT - row * 102 - waveIndex * 34;
             double entryTargetY = 150 + row * 58;
-            Enemy enemy = new EnemyType2Shooter(
+            Enemy enemy = Enemy.createShooter(
                     GameAssets.createShooterEnemyView(),
                     spawnX,
                     spawnY,
@@ -74,7 +71,7 @@ public final class TieredWaveSpawnStrategy implements WaveSpawnStrategy {
             double spawnX = xPositions[column];
             double spawnY = -GameAssets.HEAVY_HEIGHT - row * 120 - waveIndex * 42;
             double entryTargetY = 240 + row * 66;
-            Enemy enemy = new EnemyType3Heavy(
+            Enemy enemy = Enemy.createHeavy(
                     GameAssets.createHeavyEnemyView(),
                     spawnX,
                     spawnY,

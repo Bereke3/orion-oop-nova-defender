@@ -4,7 +4,7 @@ import it.unime.orion.powerups.PowerUpType;
 
 import java.util.Objects;
 
-public final class PowerUpCollectedEvent implements GameEvent {
+public final class PowerUpCollectedEvent {
 
     private final String powerUpId;
     private final PowerUpType powerUpType;

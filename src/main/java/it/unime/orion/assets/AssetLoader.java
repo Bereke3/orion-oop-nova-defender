@@ -18,7 +18,7 @@ public final class AssetLoader {
         InputStream resourceStream = getClass().getResourceAsStream(resourcePath);
         if (resourceStream == null) {
             LOGGER.severe("Missing resource requested by the game: " + resourcePath);
-            throw new MissingAssetException("Resource not found: " + resourcePath);
+            throw new IllegalArgumentException("Resource not found: " + resourcePath);
         }
         try (InputStream input = resourceStream) {
             return new Image(new ByteArrayInputStream(input.readAllBytes()));

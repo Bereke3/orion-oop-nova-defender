@@ -1,6 +1,5 @@
 package it.unime.orion.combat;
 
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.GameEntity;
 import javafx.scene.Node;
 
@@ -15,7 +14,7 @@ public abstract class Projectile extends GameEntity {
                          double y,
                          int damage,
                          double lifetimeSeconds) {
-        super(EntityType.PROJECTILE, view, x, y);
+        super(view, x, y);
         this.damage = damage;
         this.lifetimeSeconds = lifetimeSeconds;
         this.timeLeft = lifetimeSeconds;

@@ -149,20 +149,11 @@ public final class BossTuning {
     }
 
     public BossPhaseDefinition resolvePhase(int hp, int maxHp) {
-        if (maxHp <= 0) {
-            return phases.get(phases.size() - 1);
-        }
-        return resolvePhaseRatio(hp / (double) maxHp);
+        return BossPhaseResolver.resolve(phases, hp, maxHp);
     }
 
     public BossPhaseDefinition resolvePhaseRatio(double hpRatio) {
-        BossPhaseDefinition resolved = phases.get(0);
-        for (BossPhaseDefinition phase : phases) {
-            if (hpRatio <= phase.getMaxHpRatio()) {
-                resolved = phase;
-            }
-        }
-        return resolved;
+        return BossPhaseResolver.resolve(phases, hpRatio);
     }
 
     private List<BossPhaseDefinition> validatePhases(List<BossPhaseDefinition> phases) {

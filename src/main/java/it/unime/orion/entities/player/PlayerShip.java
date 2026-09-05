@@ -3,7 +3,6 @@ package it.unime.orion.entities.player;
 import it.unime.orion.assets.GameAssets;
 import it.unime.orion.combat.Projectile;
 import it.unime.orion.combat.Weapon;
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.ship.Ship;
 import javafx.scene.Node;
 
@@ -42,7 +41,7 @@ public final class PlayerShip extends Ship {
                       PlayerMovement movement,
                       Weapon weapon,
                       double respawnInvulnerabilitySeconds) {
-        super(EntityType.PLAYER, view, x, y, 0);
+        super(view, x, y, 0);
 
         this.stats = Objects.requireNonNull(stats, "stats");
         this.movement = Objects.requireNonNull(movement, "movement");

@@ -7,6 +7,12 @@ import java.util.Objects;
 
 public final class BossPhaseDefinition {
 
+    private static final List<BossPhaseDefinition> DEFAULT_DEFINITIONS = List.of(
+            new BossPhaseDefinition(BossPhase.PHASE_ONE, "Phase 1", 1.00, 0.95, 1.00, 1.45, 5.00, 2.00, 0.70, 8, 250),
+            new BossPhaseDefinition(BossPhase.PHASE_TWO, "Phase 2", 0.75, 1.20, 1.18, 1.05, 4.45, 2.00, 0.70, 9, 266),
+            new BossPhaseDefinition(BossPhase.PHASE_THREE, "Phase 3", 0.40, 1.48, 1.35, 0.82, 3.90, 2.00, 0.70, 10, 282)
+    );
+
     private final BossPhase phase;
     private final String displayName;
     private final double maxHpRatio;
@@ -119,10 +125,6 @@ public final class BossPhaseDefinition {
     }
 
     public static List<BossPhaseDefinition> defaultDefinitions() {
-        return List.of(
-                new BossPhaseDefinition(BossPhase.PHASE_ONE, "Phase 1", 1.00, 0.95, 1.00, 1.45, 5.00, 2.00, 0.70, 8, 250),
-                new BossPhaseDefinition(BossPhase.PHASE_TWO, "Phase 2", 0.75, 1.20, 1.18, 1.05, 4.45, 2.00, 0.70, 9, 266),
-                new BossPhaseDefinition(BossPhase.PHASE_THREE, "Phase 3", 0.40, 1.48, 1.35, 0.82, 3.90, 2.00, 0.70, 10, 282)
-        );
+        return DEFAULT_DEFINITIONS;
     }
 }

@@ -4,9 +4,7 @@ import it.unime.orion.combat.BasicWeapon;
 import it.unime.orion.combat.EnemyBullet;
 import it.unime.orion.combat.PlayerBullet;
 import it.unime.orion.entities.GameEntity;
-import it.unime.orion.entities.enemy.EnemyType2Shooter;
-import it.unime.orion.entities.enemy.EnemyType3Heavy;
-import it.unime.orion.entities.enemy.EnemyType1Swarm;
+import it.unime.orion.entities.enemy.Enemy;
 import it.unime.orion.entities.player.PlayerMovement;
 import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.entities.player.PlayerStats;
@@ -136,19 +134,19 @@ public final class RuntimePerformanceSmokeTest {
         for (int i = 0; i < 20; i++) {
             double x = 20 + (i % 10) * 80;
             double y = 40 + (i / 10) * 70;
-            world.addEntity(new EnemyType1Swarm(new Rectangle(40, 28), x, y, y, tuning));
+            world.addEntity(Enemy.createSwarm(new Rectangle(40, 28), x, y, y, tuning));
         }
 
         for (int i = 0; i < 10; i++) {
             double x = 40 + (i % 5) * 150;
             double y = 80 + (i / 5) * 60;
-            world.addEntity(new EnemyType2Shooter(new Rectangle(48, 34), x, y, y, tuning));
+            world.addEntity(Enemy.createShooter(new Rectangle(48, 34), x, y, y, tuning));
         }
 
         for (int i = 0; i < 10; i++) {
             double x = 60 + (i % 5) * 150;
             double y = 150 + (i / 5) * 70;
-            world.addEntity(new EnemyType3Heavy(new Rectangle(56, 38), x, y, y, tuning));
+            world.addEntity(Enemy.createHeavy(new Rectangle(56, 38), x, y, y, tuning));
         }
 
         for (int i = 0; i < 80; i++) {

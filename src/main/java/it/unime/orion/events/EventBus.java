@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 
-public final class EventBus<T extends GameEvent> {
+public final class EventBus<T> {
 
     private final List<Consumer<T>> subscribers = new ArrayList<>();
 

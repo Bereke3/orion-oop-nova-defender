@@ -1,7 +1,9 @@
 package it.unime.orion.game;
 
+import it.unime.orion.assets.GameAssets;
 import it.unime.orion.entities.GameEntity;
 import it.unime.orion.entities.boss.BossA;
+import it.unime.orion.entities.boss.BossPhase;
 import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.level.LevelDefinition;
 import it.unime.orion.level.WaveManager;
@@ -16,7 +18,6 @@ public final class CampaignProgression {
     private final GameWorld world;
     private final double worldWidth;
     private final List<LevelDefinition> campaignLevels;
-    private final BossFactory bossFactory;
 
     private int currentLevelIndex;
     private WaveManager waveManager;
@@ -25,12 +26,10 @@ public final class CampaignProgression {
 
     public CampaignProgression(GameWorld world,
                                double worldWidth,
-                               List<LevelDefinition> campaignLevels,
-                               BossFactory bossFactory) {
+                               List<LevelDefinition> campaignLevels) {
         this.world = Objects.requireNonNull(world, "world");
         this.worldWidth = worldWidth;
         this.campaignLevels = List.copyOf(Objects.requireNonNull(campaignLevels, "campaignLevels"));
-        this.bossFactory = Objects.requireNonNull(bossFactory, "bossFactory");
         reset();
     }
 
@@ -81,7 +80,15 @@ public final class CampaignProgression {
     }
 
     private void spawnBoss(GameSession session) {
-        boss = bossFactory.create(getCurrentLevel(), worldWidth);
+        LevelDefinition level = getCurrentLevel();
+        double spawnX = (worldWidth - GameAssets.BOSS_WIDTH) / 2.0;
+        double spawnY = -GameAssets.BOSS_HEIGHT;
+        boss = new BossA(
+                GameAssets.createBossView(level.getBossAssetKey(), BossPhase.PHASE_ONE),
+                spawnX,
+                spawnY,
+                level.getBossTuning()
+        );
         world.addEntity(boss);
         session.markBossSpawned();
     }

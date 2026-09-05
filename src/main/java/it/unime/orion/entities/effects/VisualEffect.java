@@ -1,6 +1,5 @@
 package it.unime.orion.entities.effects;
 
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.GameEntity;
 import javafx.scene.Node;
 
@@ -10,7 +9,7 @@ public abstract class VisualEffect extends GameEntity {
     private double elapsedSeconds;
 
     protected VisualEffect(Node view, double x, double y, double durationSeconds) {
-        super(EntityType.EFFECT, view, x, y);
+        super(view, x, y);
 
         if (durationSeconds <= 0) {
             throw new IllegalArgumentException("durationSeconds must be > 0");

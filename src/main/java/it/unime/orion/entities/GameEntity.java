@@ -7,10 +7,9 @@ import javafx.scene.layout.Pane;
 import java.util.Objects;
 import java.util.UUID;
 
-public abstract class GameEntity implements Updatable, Renderable, Collidable {
+public abstract class GameEntity {
 
     private final String id = UUID.randomUUID().toString();
-    private final EntityType type;
 
     private double x;
     private double y;
@@ -20,8 +19,7 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
 
     private final Node view;
 
-    protected GameEntity(EntityType type, Node view, double x, double y) {
-        this.type = Objects.requireNonNull(type, "type");
+    protected GameEntity(Node view, double x, double y) {
         this.view = Objects.requireNonNull(view, "view");
         this.x = x;
         this.y = y;
@@ -30,10 +28,6 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
 
     public final String getId() {
         return id;
-    }
-
-    public final EntityType getType() {
-        return type;
     }
 
     public final double getX() {
@@ -68,12 +62,10 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
         view.setLayoutY(y);
     }
 
-    @Override
     public final void attachTo(Pane parent) {
         Objects.requireNonNull(parent, "parent").getChildren().add(view);
     }
 
-    @Override
     public final boolean detachFrom(Pane parent) {
         return Objects.requireNonNull(parent, "parent").getChildren().remove(view);
     }
@@ -82,7 +74,6 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
         return Objects.requireNonNull(parent, "parent").getChildren().contains(view);
     }
 
-    @Override
     public final void bringToFront() {
         view.toFront();
     }
@@ -104,12 +95,10 @@ public abstract class GameEntity implements Updatable, Renderable, Collidable {
         view.setRotate(angleDegrees);
     }
 
-    @Override
     public Bounds getCollisionBounds() {
         return view.getBoundsInParent();
     }
 
-    @Override
     public void update(double deltaSeconds) {
         x += vx * deltaSeconds;
         y += vy * deltaSeconds;

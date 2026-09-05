@@ -32,8 +32,7 @@ public final class CampaignProgressionTest {
         CampaignProgression progression = new CampaignProgression(
                 world,
                 900,
-                List.of(createLevel(1)),
-                this::createBoss
+                List.of(createLevel(1))
         );
 
         progression.startFirstWave();
@@ -55,8 +54,7 @@ public final class CampaignProgressionTest {
         CampaignProgression progression = new CampaignProgression(
                 world,
                 900,
-                List.of(createLevel(1)),
-                this::createBoss
+                List.of(createLevel(1))
         );
 
         progression.startFirstWave();
@@ -81,8 +79,7 @@ public final class CampaignProgressionTest {
         CampaignProgression progression = new CampaignProgression(
                 world,
                 900,
-                List.of(createLevel(1), createLevel(2)),
-                this::createBoss
+                List.of(createLevel(1), createLevel(2))
         );
 
         progression.startFirstWave();
@@ -111,8 +108,7 @@ public final class CampaignProgressionTest {
         CampaignProgression progression = new CampaignProgression(
                 world,
                 900,
-                List.of(createLevel(1)),
-                this::createBoss
+                List.of(createLevel(1))
         );
 
         progression.startFirstWave();
@@ -140,10 +136,6 @@ public final class CampaignProgressionTest {
     private WaveSpawnStrategy ignoringSpawnStrategy() {
         return (world, worldWidth, waveIndex, wave, enemyTuning) -> {
         };
-    }
-
-    private BossA createBoss(LevelDefinition level, double worldWidth) {
-        return new BossA(new Rectangle(100, 60), 100, 0, level.getBossTuning());
     }
 
     private PlayerShip createPlayer() {

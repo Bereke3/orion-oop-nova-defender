@@ -1,10 +1,9 @@
 package it.unime.orion.systems;
 
 import it.unime.orion.combat.BasicWeapon;
+import it.unime.orion.combat.Weapon;
 import it.unime.orion.combat.PlayerBullet;
 import it.unime.orion.entities.enemy.Enemy;
-import it.unime.orion.entities.enemy.EnemyType1Swarm;
-import it.unime.orion.game.GamePowerUpContext;
 import it.unime.orion.game.GameSession;
 import it.unime.orion.entities.player.PlayerMovement;
 import it.unime.orion.entities.player.PlayerShip;
@@ -16,6 +15,7 @@ import it.unime.orion.events.PowerUpCollectedEvent;
 import it.unime.orion.level.EnemyTuning;
 import it.unime.orion.powerups.ExtraLifePowerUp;
 import it.unime.orion.powerups.HealPowerUp;
+import it.unime.orion.powerups.PowerUpContext;
 import it.unime.orion.powerups.PowerUpType;
 import it.unime.orion.world.GameWorld;
 import javafx.scene.shape.Rectangle;
@@ -41,10 +41,10 @@ public final class CollisionSystemTest {
                 damageBus,
                 enemyDestroyedBus,
                 powerUpCollectedBus,
-                new GamePowerUpContext(player, session)
+                createPowerUpContext(player, session)
         );
 
-        Enemy enemy = new EnemyType1Swarm(new Rectangle(34, 28), 100, 100, 100, new EnemyTuning(1.0, 1.0));
+        Enemy enemy = Enemy.createSwarm(new Rectangle(34, 28), 100, 100, 100, new EnemyTuning(1.0, 1.0));
         PlayerBullet bullet = new PlayerBullet(new Rectangle(8, 18), 100, 100);
         AtomicReference<EnemyDestroyedEvent> publishedEvent = new AtomicReference<>();
 
@@ -79,7 +79,7 @@ public final class CollisionSystemTest {
                 damageBus,
                 enemyDestroyedBus,
                 powerUpCollectedBus,
-                new GamePowerUpContext(player, session)
+                createPowerUpContext(player, session)
         );
 
         HealPowerUp healPowerUp = new HealPowerUp(new Rectangle(24, 24), player.getX(), player.getY(), 25);
@@ -119,7 +119,7 @@ public final class CollisionSystemTest {
                 damageBus,
                 enemyDestroyedBus,
                 powerUpCollectedBus,
-                new GamePowerUpContext(player, session)
+                createPowerUpContext(player, session)
         );
 
         ExtraLifePowerUp extraLifePowerUp = new ExtraLifePowerUp(new Rectangle(24, 24), player.getX(), player.getY());
@@ -144,5 +144,29 @@ public final class CollisionSystemTest {
                 new PlayerMovement(250, 0, 800, 0, 600),
                 new BasicWeapon()
         );
+    }
+
+    private PowerUpContext createPowerUpContext(PlayerShip player, GameSession session) {
+        return new PowerUpContext() {
+            @Override
+            public void healPlayer(int amount) {
+                player.heal(amount);
+            }
+
+            @Override
+            public void activateShield() {
+                player.activateShield();
+            }
+
+            @Override
+            public void activateTemporaryWeapon(Weapon weapon, double durationSeconds) {
+                player.activateTemporaryWeapon(weapon, durationSeconds);
+            }
+
+            @Override
+            public boolean gainLife() {
+                return session.gainLife();
+            }
+        };
     }
 }

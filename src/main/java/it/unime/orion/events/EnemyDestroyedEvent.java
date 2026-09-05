@@ -1,6 +1,6 @@
 package it.unime.orion.events;
 
-public final class EnemyDestroyedEvent implements GameEvent {
+public final class EnemyDestroyedEvent {
 
     private final String enemyId;
     private final double x;

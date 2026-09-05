@@ -60,4 +60,9 @@ public final class PlayerInputController {
         }
         wasFirePressed = pressedFire;
     }
+
+    public void reset() {
+        wasDamagePressed = false;
+        wasFirePressed = false;
+    }
 }

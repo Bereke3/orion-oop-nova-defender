@@ -22,10 +22,9 @@ public final class SessionInputInterpreter {
         SessionCommand command = SessionCommand.NONE;
 
         boolean startPressed = input.isConfirmPressed();
-        if (startPressed && !wasStartPressed) {
-            if (state == GameState.START_SCREEN || state.isTerminal()) {
-                command = SessionCommand.START_OR_CONTINUE;
-            }
+        if (startPressed && !wasStartPressed
+                && (state == GameState.START_SCREEN || state.isTerminal())) {
+            command = SessionCommand.START_OR_CONTINUE;
         }
         wasStartPressed = startPressed;
 

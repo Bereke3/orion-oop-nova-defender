@@ -15,8 +15,7 @@ final class GameRunLifecycle implements AutoCloseable {
     private final GameWorld world;
     private final GameSession session;
     private final PlayerMovement playerMovement;
-    private final PlayerFactory playerFactory;
-    private final GameplayRuntimeFactory runtimeFactory;
+    private final GameController.PlayerCreator playerCreator;
     private final CampaignProgression progression;
     private final GameUiPresenter uiPresenter;
 
@@ -28,8 +27,7 @@ final class GameRunLifecycle implements AutoCloseable {
                      GameWorld world,
                      GameSession session,
                      PlayerMovement playerMovement,
-                     PlayerFactory playerFactory,
-                     GameplayRuntimeFactory runtimeFactory,
+                     GameController.PlayerCreator playerCreator,
                      CampaignProgression progression,
                      GameUiPresenter uiPresenter) {
         this.worldWidth = worldWidth;
@@ -37,8 +35,7 @@ final class GameRunLifecycle implements AutoCloseable {
         this.world = Objects.requireNonNull(world, "world");
         this.session = Objects.requireNonNull(session, "session");
         this.playerMovement = Objects.requireNonNull(playerMovement, "playerMovement");
-        this.playerFactory = Objects.requireNonNull(playerFactory, "playerFactory");
-        this.runtimeFactory = Objects.requireNonNull(runtimeFactory, "runtimeFactory");
+        this.playerCreator = Objects.requireNonNull(playerCreator, "playerCreator");
         this.progression = Objects.requireNonNull(progression, "progression");
         this.uiPresenter = Objects.requireNonNull(uiPresenter, "uiPresenter");
     }
@@ -46,8 +43,12 @@ final class GameRunLifecycle implements AutoCloseable {
     void initializeRun() {
         closeRunResources();
         progression.reset();
-        PlayerShip player = playerFactory.create(playerMovement, worldWidth, worldHeight);
-        runtime = runtimeFactory.create(world, session, player, worldWidth);
+        runtime = new GameplayRuntime(
+                world,
+                session,
+                playerCreator.create(playerMovement, worldWidth, worldHeight),
+                worldWidth
+        );
         appliedLevelNumber = -1;
         synchronizeLevelRuntimeTuning();
         refreshUi();

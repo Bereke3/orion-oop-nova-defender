@@ -1,6 +1,6 @@
 package it.unime.orion.events;
 
-public final class DamageEvent implements GameEvent {
+public final class DamageEvent {
 
     private final String targetId;
     private final int amount;

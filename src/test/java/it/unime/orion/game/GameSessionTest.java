@@ -32,13 +32,13 @@ public final class GameSessionTest {
 
     @Test
     void testScoreCounterRejectsNegativeValues() {
-        ScoreCounter scoreCounter = new ScoreCounter();
+        GameSession session = new GameSession();
 
         try {
-            scoreCounter.addPoints(-10);
+            session.addScore(-10);
             fail("Negative score updates must be rejected");
         } catch (IllegalArgumentException expected) {
-            assertEquals(0, scoreCounter.getPoints());
+            assertEquals(0, session.getScore());
         }
     }
 

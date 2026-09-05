@@ -1,6 +1,5 @@
 package it.unime.orion.world;
 
-import it.unime.orion.entities.EntityType;
 import it.unime.orion.entities.GameEntity;
 import it.unime.orion.errors.EntityLifecycleException;
 import javafx.scene.shape.Rectangle;
@@ -34,7 +33,7 @@ public final class GameWorldLifecycleTest {
     private static final class DummyEntity extends GameEntity {
 
         private DummyEntity() {
-            super(EntityType.EFFECT, new Rectangle(10, 10), 0, 0);
+            super(new Rectangle(10, 10), 0, 0);
         }
 
         @Override

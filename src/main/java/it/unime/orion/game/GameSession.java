@@ -1,9 +1,12 @@
 package it.unime.orion.game;
 
+import it.unime.orion.errors.InvalidGameConfigurationException;
+
 public final class GameSession {
 
-    private final ScoreCounter scoreCounter = new ScoreCounter();
-    private final LifeCounter lifeCounter;
+    private final int initialLives;
+    private int score;
+    private int currentLives;
     private GameState state = GameState.START_SCREEN;
     private boolean bossSpawned;
 
@@ -12,7 +15,11 @@ public final class GameSession {
     }
 
     public GameSession(int initialLives) {
-        this.lifeCounter = new LifeCounter(initialLives);
+        if (initialLives <= 0) {
+            throw new InvalidGameConfigurationException("initialLives must be > 0");
+        }
+        this.initialLives = initialLives;
+        this.currentLives = initialLives;
     }
 
     public GameState getState() {
@@ -20,15 +27,15 @@ public final class GameSession {
     }
 
     public int getScore() {
-        return scoreCounter.getPoints();
+        return score;
     }
 
     public int getLivesLeft() {
-        return lifeCounter.getCurrentLives();
+        return currentLives;
     }
 
     public int getInitialLives() {
-        return lifeCounter.getInitialLives();
+        return initialLives;
     }
 
     public boolean isRunning() {
@@ -50,8 +57,8 @@ public final class GameSession {
     }
 
     private void beginNewRun() {
-        scoreCounter.reset();
-        lifeCounter.reset();
+        score = 0;
+        currentLives = initialLives;
         bossSpawned = false;
         state = GameState.RUNNING;
     }
@@ -65,11 +72,18 @@ public final class GameSession {
     }
 
     public void addScore(int points) {
-        scoreCounter.addPoints(points);
+        if (points < 0) {
+            throw new IllegalArgumentException("points must be >= 0");
+        }
+        score += points;
     }
 
     public boolean gainLife() {
-        return lifeCounter.gainLife();
+        if (currentLives >= initialLives) {
+            return false;
+        }
+        currentLives++;
+        return true;
     }
 
     public boolean handlePlayerDestroyed() {
@@ -77,7 +91,11 @@ public final class GameSession {
             return false;
         }
 
-        if (lifeCounter.loseLife()) {
+        if (currentLives > 0) {
+            currentLives--;
+        }
+
+        if (currentLives > 0) {
             return true;
         }
 

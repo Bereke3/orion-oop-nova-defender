@@ -1,6 +1,7 @@
 package it.unime.orion.game;
 
 import it.unime.orion.combat.Projectile;
+import it.unime.orion.combat.Weapon;
 import it.unime.orion.entities.player.PlayerShip;
 import it.unime.orion.events.DamageEvent;
 import it.unime.orion.events.EnemyDestroyedEvent;
@@ -8,6 +9,7 @@ import it.unime.orion.events.EventBus;
 import it.unime.orion.events.EventSubscription;
 import it.unime.orion.events.PowerUpCollectedEvent;
 import it.unime.orion.level.LevelRuntimeTuning;
+import it.unime.orion.powerups.PowerUpContext;
 import it.unime.orion.systems.FixedBossRewardPolicy;
 import it.unime.orion.systems.BossRewardSystem;
 import it.unime.orion.systems.CollisionSystem;
@@ -46,7 +48,7 @@ public final class GameplayRuntime implements AutoCloseable {
                 damageBus,
                 enemyDestroyedBus,
                 powerUpCollectedBus,
-                new GamePowerUpContext(player, session)
+                new RuntimePowerUpContext(player, session)
         );
         this.enemyAttackSystem = new EnemyAttackSystem(world, player);
         this.powerUpSpawnSystem = new PowerUpSpawnSystem(world, worldWidth);
@@ -118,6 +120,37 @@ public final class GameplayRuntime implements AutoCloseable {
             closeable.close();
         } catch (Exception exception) {
             throw new IllegalStateException("Failed to close gameplay runtime resource", exception);
+        }
+    }
+
+    private static final class RuntimePowerUpContext implements PowerUpContext {
+
+        private final PlayerShip player;
+        private final GameSession session;
+
+        private RuntimePowerUpContext(PlayerShip player, GameSession session) {
+            this.player = Objects.requireNonNull(player, "player");
+            this.session = Objects.requireNonNull(session, "session");
+        }
+
+        @Override
+        public void healPlayer(int amount) {
+            player.heal(amount);
+        }
+
+        @Override
+        public void activateShield() {
+            player.activateShield();
+        }
+
+        @Override
+        public void activateTemporaryWeapon(Weapon weapon, double durationSeconds) {
+            player.activateTemporaryWeapon(weapon, durationSeconds);
+        }
+
+        @Override
+        public boolean gainLife() {
+            return session.gainLife();
         }
     }
 }

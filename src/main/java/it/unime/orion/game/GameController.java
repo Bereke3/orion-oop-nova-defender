@@ -1,12 +1,12 @@
 package it.unime.orion.game;
 
 import it.unime.orion.assets.GameAssets;
+import it.unime.orion.combat.BasicWeapon;
 import it.unime.orion.entities.player.PlayerMovement;
+import it.unime.orion.entities.player.PlayerShip;
+import it.unime.orion.entities.player.PlayerStats;
 import it.unime.orion.input.InputState;
-import it.unime.orion.level.CampaignFactory;
-import it.unime.orion.level.CampaignValidator;
 import it.unime.orion.level.DefaultCampaignFactory;
-import it.unime.orion.level.DefaultCampaignValidator;
 import it.unime.orion.level.LevelDefinition;
 import it.unime.orion.ui.GameUiPresenter;
 import it.unime.orion.ui.GameOverlayView;
@@ -15,11 +15,16 @@ import it.unime.orion.world.GameWorld;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.DoubleFunction;
 
 public final class GameController implements AutoCloseable {
 
+    @FunctionalInterface
+    public interface PlayerCreator {
+
+        PlayerShip create(PlayerMovement movement, double worldWidth, double worldHeight);
+    }
     private final GameSession session = new GameSession();
-    private final PlayerMovement playerMovement;
     private final SessionInputInterpreter sessionInputInterpreter;
     private final PlayerInputController playerInputController;
     private final GameRunLifecycle runLifecycle;
@@ -30,8 +35,7 @@ public final class GameController implements AutoCloseable {
                           HudView hud,
                           GameOverlayView overlay,
                           InputState input) {
-        this(worldWidth, worldHeight, world, hud, overlay, input,
-                new DefaultCampaignFactory(), new DefaultPlayerFactory(), new DefaultBossFactory(), new DefaultGameplayRuntimeFactory());
+        this(worldWidth, worldHeight, world, hud, overlay, input, new DefaultCampaignFactory()::createCampaign);
     }
 
     public GameController(double worldWidth,
@@ -40,9 +44,8 @@ public final class GameController implements AutoCloseable {
                           HudView hud,
                           GameOverlayView overlay,
                           InputState input,
-                          CampaignFactory campaignFactory) {
-        this(worldWidth, worldHeight, world, hud, overlay, input,
-                campaignFactory, new DefaultPlayerFactory(), new DefaultBossFactory(), new DefaultGameplayRuntimeFactory());
+                          DoubleFunction<List<LevelDefinition>> campaignLoader) {
+        this(worldWidth, worldHeight, world, hud, overlay, input, campaignLoader, GameController::createDefaultPlayer);
     }
 
     public GameController(double worldWidth,
@@ -51,52 +54,29 @@ public final class GameController implements AutoCloseable {
                           HudView hud,
                           GameOverlayView overlay,
                           InputState input,
-                          CampaignFactory campaignFactory,
-                          PlayerFactory playerFactory,
-                          BossFactory bossFactory,
-                          GameplayRuntimeFactory runtimeFactory) {
-        this(worldWidth, worldHeight, world, hud, overlay, input,
-                campaignFactory, playerFactory, bossFactory, runtimeFactory, new DefaultCampaignValidator());
-    }
-
-    public GameController(double worldWidth,
-                          double worldHeight,
-                          GameWorld world,
-                          HudView hud,
-                          GameOverlayView overlay,
-                          InputState input,
-                          CampaignFactory campaignFactory,
-                          PlayerFactory playerFactory,
-                          BossFactory bossFactory,
-                          GameplayRuntimeFactory runtimeFactory,
-                          CampaignValidator campaignValidator) {
+                          DoubleFunction<List<LevelDefinition>> campaignLoader,
+                          PlayerCreator playerCreator) {
         Objects.requireNonNull(input, "input");
 
-        this.playerMovement = createPlayerMovement(worldWidth, worldHeight);
+        PlayerMovement playerMovement = createPlayerMovement(worldWidth, worldHeight);
         this.sessionInputInterpreter = new SessionInputInterpreter(input);
         this.playerInputController = new PlayerInputController(input, playerMovement);
-        List<LevelDefinition> campaignLevels = Objects.requireNonNull(campaignValidator, "campaignValidator")
-                .validateCampaign(Objects.requireNonNull(campaignFactory, "campaignFactory").createCampaign(worldWidth));
-        CampaignProgression progression = new CampaignProgression(
-                Objects.requireNonNull(world, "world"),
-                worldWidth,
-                campaignLevels,
-                Objects.requireNonNull(bossFactory, "bossFactory")
-        );
-        GameUiPresenter uiPresenter = new GameUiPresenter(
-                Objects.requireNonNull(hud, "hud"),
-                Objects.requireNonNull(overlay, "overlay")
+
+        List<LevelDefinition> campaignLevels = DefaultCampaignFactory.validateCampaign(
+                Objects.requireNonNull(campaignLoader, "campaignLoader").apply(worldWidth)
         );
         this.runLifecycle = new GameRunLifecycle(
                 worldWidth,
                 worldHeight,
-                world,
+                Objects.requireNonNull(world, "world"),
                 session,
                 playerMovement,
-                Objects.requireNonNull(playerFactory, "playerFactory"),
-                Objects.requireNonNull(runtimeFactory, "runtimeFactory"),
-                progression,
-                uiPresenter
+                Objects.requireNonNull(playerCreator, "playerCreator"),
+                new CampaignProgression(world, worldWidth, campaignLevels),
+                new GameUiPresenter(
+                        Objects.requireNonNull(hud, "hud"),
+                        Objects.requireNonNull(overlay, "overlay")
+                )
         );
         runLifecycle.initializeRun();
     }
@@ -121,7 +101,7 @@ public final class GameController implements AutoCloseable {
         runLifecycle.postUpdate();
     }
 
-    private PlayerMovement createPlayerMovement(double worldWidth, double worldHeight) {
+    private static PlayerMovement createPlayerMovement(double worldWidth, double worldHeight) {
         double shipWidth = GameAssets.PLAYER_WIDTH;
         double shipHeight = GameAssets.PLAYER_HEIGHT;
         double movementMargin = 5;
@@ -134,6 +114,22 @@ public final class GameController implements AutoCloseable {
         return new PlayerMovement(250, minX, maxX, minY, maxY);
     }
 
+    private static PlayerShip createDefaultPlayer(PlayerMovement movement, double worldWidth, double worldHeight) {
+        Objects.requireNonNull(movement, "movement");
+
+        double spawnX = (worldWidth - GameAssets.PLAYER_WIDTH) / 2.0;
+        double spawnY = worldHeight - GameAssets.PLAYER_HEIGHT - 14;
+
+        return new PlayerShip(
+                GameAssets.createPlayerView(),
+                spawnX,
+                spawnY,
+                new PlayerStats(100),
+                movement,
+                new BasicWeapon()
+        );
+    }
+
     private void handleSessionCommand(SessionCommand command) {
         switch (Objects.requireNonNull(command, "command")) {
             case NONE -> {
@@ -142,11 +138,15 @@ public final class GameController implements AutoCloseable {
                 if (session.getState() == GameState.START_SCREEN) {
                     runLifecycle.startSession();
                 } else if (session.getState().isTerminal()) {
+                    playerInputController.reset();
                     runLifecycle.restartSession();
                 }
             }
             case TOGGLE_PAUSE -> session.togglePause();
-            case RESTART_RUN -> runLifecycle.restartSession();
+            case RESTART_RUN -> {
+                playerInputController.reset();
+                runLifecycle.restartSession();
+            }
         }
     }
 

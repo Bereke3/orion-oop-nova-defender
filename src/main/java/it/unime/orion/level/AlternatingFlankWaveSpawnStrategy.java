@@ -2,9 +2,6 @@ package it.unime.orion.level;
 
 import it.unime.orion.assets.GameAssets;
 import it.unime.orion.entities.enemy.Enemy;
-import it.unime.orion.entities.enemy.EnemyType1Swarm;
-import it.unime.orion.entities.enemy.EnemyType2Shooter;
-import it.unime.orion.entities.enemy.EnemyType3Heavy;
 import it.unime.orion.world.GameWorld;
 
 import java.util.Objects;
@@ -29,7 +26,7 @@ public final class AlternatingFlankWaveSpawnStrategy implements WaveSpawnStrateg
             double spawnX = leftSide ? 70 + row * 18 : worldWidth - GameAssets.SWARM_WIDTH - 70 - row * 18;
             double spawnY = -GameAssets.SWARM_HEIGHT - row * 64 - waveIndex * 20;
             double entryTargetY = 80 + row * 38;
-            Enemy enemy = new EnemyType1Swarm(
+            Enemy enemy = Enemy.createSwarm(
                     GameAssets.createSwarmEnemyView(),
                     spawnX,
                     spawnY,
@@ -51,7 +48,7 @@ public final class AlternatingFlankWaveSpawnStrategy implements WaveSpawnStrateg
             double spawnX = centerX + offset - GameAssets.SHOOTER_WIDTH / 2.0;
             double spawnY = -GameAssets.SHOOTER_HEIGHT - i * 86 - waveIndex * 28;
             double entryTargetY = 150 + Math.abs(offset) * 0.12;
-            Enemy enemy = new EnemyType2Shooter(
+            Enemy enemy = Enemy.createShooter(
                     GameAssets.createShooterEnemyView(),
                     spawnX,
                     spawnY,
@@ -73,7 +70,7 @@ public final class AlternatingFlankWaveSpawnStrategy implements WaveSpawnStrateg
             double spawnX = centerX + horizontalOffset;
             double spawnY = -GameAssets.HEAVY_HEIGHT - i * 118 - waveIndex * 36;
             double entryTargetY = 240 + i * 40;
-            Enemy enemy = new EnemyType3Heavy(
+            Enemy enemy = Enemy.createHeavy(
                     GameAssets.createHeavyEnemyView(),
                     spawnX,
                     spawnY,

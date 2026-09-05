@@ -11,12 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public final class CampaignValidatorTest {
 
-    private final CampaignValidator validator = new DefaultCampaignValidator();
-
     @Test
     void testValidatorRejectsEmptyCampaign() {
         try {
-            validator.validateCampaign(List.of());
+            DefaultCampaignFactory.validateCampaign(List.of());
             fail("CampaignValidator must reject empty campaigns");
         } catch (InvalidGameConfigurationException expected) {
             assertTrue(expected.getMessage().contains("at least one level"));
@@ -26,7 +24,7 @@ public final class CampaignValidatorTest {
     @Test
     void testValidatorRejectsNonSequentialLevels() {
         try {
-            validator.validateCampaign(List.of(createLevel(1, "boss_a"), createLevel(3, "boss_a_phase2")));
+            DefaultCampaignFactory.validateCampaign(List.of(createLevel(1, "boss_a"), createLevel(3, "boss_a_phase2")));
             fail("CampaignValidator must reject campaigns with level gaps");
         } catch (InvalidGameConfigurationException expected) {
             assertTrue(expected.getMessage().contains("sequential"));
@@ -36,7 +34,7 @@ public final class CampaignValidatorTest {
     @Test
     void testValidatorRejectsBlankBossAssetKey() {
         try {
-            validator.validateCampaign(List.of(createLevel(1, "   ")));
+            DefaultCampaignFactory.validateCampaign(List.of(createLevel(1, "   ")));
             fail("CampaignValidator must reject blank boss asset keys");
         } catch (InvalidGameConfigurationException expected) {
             assertTrue(expected.getMessage().contains("boss asset key"));
@@ -45,7 +43,7 @@ public final class CampaignValidatorTest {
 
     @Test
     void testDefaultCampaignFactoryProducesValidCampaign() {
-        List<LevelDefinition> levels = validator.validateCampaign(new DefaultCampaignFactory().createCampaign(900));
+        List<LevelDefinition> levels = DefaultCampaignFactory.validateCampaign(new DefaultCampaignFactory().createCampaign(900));
 
         assertEquals(4, levels.size());
         assertEquals(1, levels.get(0).getLevelNumber());

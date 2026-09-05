@@ -14,13 +14,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-public final class DefaultCampaignFactory implements CampaignFactory {
+public final class DefaultCampaignFactory {
 
     private static final String RESOURCE_PATH = "/campaign/default-campaign.json";
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Logger LOGGER = Logger.getLogger(DefaultCampaignFactory.class.getName());
 
-    @Override
     public List<LevelDefinition> createCampaign(double worldWidth) {
         CampaignDocument document = loadDocument();
         double bossMinX = document.bossArenaPaddingX();
@@ -29,6 +30,22 @@ public final class DefaultCampaignFactory implements CampaignFactory {
         return document.levels().stream()
                 .map(level -> toLevelDefinition(level, bossMinX, bossMaxX))
                 .toList();
+    }
+
+    public static List<LevelDefinition> validateCampaign(List<LevelDefinition> levels) {
+        Objects.requireNonNull(levels, "levels");
+
+        List<LevelDefinition> snapshot = List.copyOf(levels);
+        if (snapshot.isEmpty()) {
+            throw validationFailure("Campaign must contain at least one level");
+        }
+
+        for (int index = 0; index < snapshot.size(); index++) {
+            LevelDefinition level = snapshot.get(index);
+            validateLevel(level, index + 1);
+        }
+
+        return snapshot;
     }
 
     private CampaignDocument loadDocument() {
@@ -145,6 +162,31 @@ public final class DefaultCampaignFactory implements CampaignFactory {
 
     private String normalizeEnum(String value) {
         return normalizeId(value).replace('-', '_').toUpperCase(Locale.ROOT);
+    }
+
+    private static void validateLevel(LevelDefinition level, int expectedLevelNumber) {
+        if (level == null) {
+            throw validationFailure("Campaign must not contain null level definitions");
+        }
+        if (level.getLevelNumber() != expectedLevelNumber) {
+            throw validationFailure(
+                    "Campaign levels must be sequential starting from 1; expected level "
+                            + expectedLevelNumber
+                            + " but found "
+                            + level.getLevelNumber()
+            );
+        }
+        if (level.getBossAssetKey().isBlank()) {
+            throw validationFailure("Level " + expectedLevelNumber + " must define a non-blank boss asset key");
+        }
+        if (level.getBossTuning().getScoreValue() <= 0) {
+            throw validationFailure("Level " + expectedLevelNumber + " boss must award a positive score value");
+        }
+    }
+
+    private static InvalidGameConfigurationException validationFailure(String message) {
+        LOGGER.severe(message);
+        return new InvalidGameConfigurationException(message);
     }
 
     private record CampaignDocument(double bossArenaPaddingX, List<LevelPayload> levels) {

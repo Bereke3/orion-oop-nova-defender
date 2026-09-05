@@ -121,7 +121,7 @@ public final class GameAssets {
         try {
             loadImage(requestedPath);
             return requestedPath;
-        } catch (MissingAssetException missingRequestedAsset) {
+        } catch (IllegalArgumentException missingRequestedAsset) {
             String fallbackPath = buildBossAssetPath(DEFAULT_BOSS_KEY, phase);
             loadImage(fallbackPath);
             return fallbackPath;
